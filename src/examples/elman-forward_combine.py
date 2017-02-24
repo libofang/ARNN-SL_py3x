@@ -107,7 +107,7 @@ if __name__ == '__main__':
                 cwords = contextwin(train_lex[i])
                 labels = train_y[i]
 
-                #nl, aaL = rnn.train(cwords, labels, s['dropRate'], 1)
+                l, aaL = rnn.train(cwords, labels, s['dropRate'], 1)
 
                 # rnn.normalize()
                 if s['verbose']:
