@@ -9,7 +9,7 @@ import math
 import theano
 
 from data import loadData
-import rnn.elman_attention
+from rnn import elman_attention
 
 from data import loadData
 
@@ -18,7 +18,9 @@ from utils.tools import shuffle, minibatch, contextwin
 
 def run(s) :
     print(s)
-
+    folder = os.path.basename(__file__).split('.')[0]
+    if not os.path.exists(folder): os.mkdir(folder)
+    #print folder
 
     # load the dataset
     eval_options = []

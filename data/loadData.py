@@ -5,7 +5,7 @@ import os
 
 from os.path import isfile
 
-PREFIX = os.getenv('ATISDATA', '')
+PREFIX = "./data/"
 
 
 def load(filename):
@@ -29,7 +29,7 @@ def ner():
     dicts['words2idx'] = {}
 
     for type in ["train", "test", "valid"] :
-        with open("./ner." + type) as f:
+        with open(PREFIX + "ner." + type) as f:
             for line in f:
                 if len(line.strip()) is 0 :
                     continue
@@ -48,7 +48,7 @@ def ner():
         ww = []
         ll = []
         oo = []
-        with open("./ner." + type) as f:
+        with open(PREFIX + "ner." + type) as f:
             for line in f:
                 if len(line.strip()) is 0 :
                     if len(w) > 0:
@@ -77,7 +77,7 @@ def chunk():
     dicts['words2idx'] = {}
 
     for type in ["train", "test", "valid"] :
-        with open("./chunk." + type) as f:
+        with open(PREFIX + "chunk." + type) as f:
             for line in f:
                 if len(line.strip()) is 0 :
                     continue
@@ -96,7 +96,7 @@ def chunk():
         ww = []
         ll = []
         oo = []
-        with open("./chunk." + type) as f:
+        with open(PREFIX + "chunk." + type) as f:
             for line in f:
                 if len(line.strip()) is 0 :
                     if len(w) > 0:
@@ -121,7 +121,7 @@ def pos():
     dicts['words2idx'] = {}
 
     for type in ["train", "test", "valid"] :
-        with open("./chunk." + type) as f:
+        with open(PREFIX + "chunk." + type) as f:
             for line in f:
                 if len(line.strip()) is 0 :
                     continue
@@ -140,7 +140,7 @@ def pos():
         ww = []
         ll = []
         oo = []
-        with open("./chunk." + type) as f:
+        with open(PREFIX + "chunk." + type) as f:
             for line in f:
                 if len(line.strip()) is 0 :
                     if len(w) > 0:

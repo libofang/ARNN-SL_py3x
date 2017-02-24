@@ -7,9 +7,8 @@ import stat
 import subprocess
 from os.path import isfile, join
 from os import chmod
-from data.loadData import download
 
-PREFIX = os.getenv('ATISDATA', '')
+PREFIX = "./data/"
 
 def conlleval(p, g, w, filename, options=[]):
     '''
@@ -43,9 +42,6 @@ def get_perf(filename, options = []):
     ''' run conlleval.pl perl script to obtain
     precision/recall and F1 score '''
     _conlleval = PREFIX + 'conlleval.pl'
-    if not isfile(_conlleval):
-        download('http://www-etud.iro.umontreal.ca/~mesnilgr/atis/conlleval.pl') 
-        chmod('conlleval.pl', stat.S_IRWXU) # give the execute permissions
     proc = subprocess.Popen(["perl", _conlleval] + options, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     with open(filename, 'r') as file:
         stdout, _ = proc.communicate(file.read().encode())
