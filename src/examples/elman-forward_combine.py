@@ -7,6 +7,7 @@ import random
 import numpy as np
 import math
 import theano
+import socket
 sys.path.append("../../")
 
 from src.rnn import elman_attention
@@ -179,6 +180,12 @@ if __name__ == '__main__':
 
 
 if __name__ == '__main__':
+    
+
+    if "m.gsic.titech.ac.jp" in socket.gethostname():
+        dir_root='/work/alex/data/linguistic/embeddings/Bofang/'
+    else:
+        dir_root='/home/lbf/PycharmProjects/WV/'
 
     s = {
         'verbose': 2,
@@ -193,7 +200,8 @@ if __name__ == '__main__':
         'attention': 'general',
         'lvrg': 0,  # 0 for standard RNN, 1 for attetion.
         'rho': numpy.array([100, 50]).astype(numpy.int32), #100,90,80,70,60,50,0 # combining forward and backward layers
-        'WVRoot_folder': '/home/lbf/PycharmProjects/WV/'
+        'WVRoot_folder': dir_root
+
     }
 
 
