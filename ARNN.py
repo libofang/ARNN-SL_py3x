@@ -19,21 +19,11 @@ if __name__ == '__main__':
         ARNN.py [options]
 
     Options:
-        --verbose           verbose, print more text    [default: 2]
-        --dataset           the dataset: pos, chunk, ner, atis [default: ner]
-        --fold              0,1,2,3,4  used only for atis  [default: 3]
-        --h_win_left        (0, 0) for standard RNN    [default: 0]
-        --h_win_right       (0, 0) for standard RNN    [default: 0]
-
-
-        --dyn        Dynamic context windows
-        --sub NUM    Subsampling threshold [default: 0]
-        --ngram NUM  ngram size [default: 1]
-        --cbow NUM  use cbow [default: 0]
-        --solid      Use ngram as vectors
-        --thr NUM    The minimal word count for being in the vocabulary [default: 100]
-        --thr2 NUM   The minimal word count for being in the vocabulary [default: 100]
-        --win NUM    Window size [default: 2]
+        --verbose NUM       verbose print more text    [default: 2]
+        --dataset STRING    the dataset: pos, chunk, ner, atis [default: ner]
+        --fold NUM          0,1,2,3,4  used only for atis dataset  [default: 3]
+        --h_win_left NUM    0 for standard RNN    [default: 0]
+        --h_win_right NUM   0 for standard RNN    [default: 0]
     """)
 
 
@@ -42,14 +32,14 @@ if __name__ == '__main__':
         'nhidden': 100,  # number of hidden units
         'seed': 123,
         'nepochs': 30,
-        'dropRate': 0.2,
+        'dropRate': 0.0,
         'attention': 'general',
         'lvrg': 0,  # 0 for standard RNN, 1 for attetion.
         'rho': numpy.array([100, 50]).astype(numpy.int32), #100,90,80,70,60,50,0 # combining forward and backward layers
         'WVRoot_folder': '/home/lbf/PycharmProjects/WV/'
     }
     params['verbose'] = int(args['--verbose'])
-    params['dataset'] = args['--dyn']
+    params['dataset'] = args['--dataset']
     params['h_win'] = (int(args['--h_win_left']), int(args['--h_win_right']))
 
     for model in ['glove', 'skip', 'cbow']: #
