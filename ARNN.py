@@ -28,7 +28,6 @@ if __name__ == '__main__':
         --ngram NUM  ngram size [default: 1]
         --cbow NUM  use cbow [default: 0]
         --solid      Use ngram as vectors
-        --slf        Use self
     """)
 
 
