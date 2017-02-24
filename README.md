@@ -1,8 +1,13 @@
 # ARNN-SL for python3.x
 
-See the main function of examples/elman-forward_combine.py
+run examples/elman-forward_combine.py file with Environment Variable 
+```
+THEANO_FLAGS=cuda.root=/usr/local/cuda,device=gpu,floatX=float32
+```
 
-toy pre-trained word embeddings ca be found in:
+See the main function of examples/elman-forward_combine.py file for detailed hyper-parameter settings.
+
+toy pre-trained word embeddings can be found:
 embedding: http://202.112.113.8/d/ARNN-SL/WV/201308_p_word_linear-2_skip/sgns.words25.npy    
 vocab: http://202.112.113.8/d/ARNN-SL/WV/201308_p_word_linear-2_skip/sgns.words25.vocab
 
