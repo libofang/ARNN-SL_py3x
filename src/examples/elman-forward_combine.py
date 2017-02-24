@@ -7,6 +7,7 @@ import random
 import numpy as np
 import math
 import theano
+sys.path.append("../../")
 
 from src.rnn import elman_attention
 from src.data import load
