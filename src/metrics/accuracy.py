@@ -49,7 +49,7 @@ def get_perf(filename, options = []):
     proc = subprocess.Popen(["perl", _conlleval] + options, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     with open(filename, 'r') as file:
         stdout, _ = proc.communicate(file.read().encode())
-    for line in stdout.split('\n'):
+    for line in stdout.decode().split('\n'):
         if 'accuracy' in line:
             out = line.split()
             break

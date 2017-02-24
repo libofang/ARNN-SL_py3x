@@ -77,6 +77,7 @@ def run(s) :
 
     best_valid = numpy.zeros(len(s['rho'])) - numpy.inf
     best_test = numpy.zeros(len(s['rho'])) - numpy.inf
+
     test_f1List = [[],[],[],[],[],[] ]
 
 
@@ -168,9 +169,9 @@ def run(s) :
             for iff1 in test_f1List[i_rho]:
                 print(iff1)
             print('')
+
         for i_rho in range(len(s['rho'])) :
             print(s['rho'][i_rho], ' ', best_valid[i_rho] , '/' , best_test[i_rho])
-
 
 
     print('BEST RESULT: epoch', e, 'valid F1', s['vf1'], 'best test F1', s['tf1'], 'with the model', folder)
