@@ -12,6 +12,7 @@ set the THEANO Environment Variable as
 THEANO_FLAGS=cuda.root=/usr/local/cuda,device=gpu,floatX=float32
 ```
 
+
 toy pre-trained word embeddings can be found:
 embedding: http://202.112.113.8/d/ARNN-SL/WV/201308_p_word_linear-2_skip/sgns.words25.npy    
 vocab: http://202.112.113.8/d/ARNN-SL/WV/201308_p_word_linear-2_skip/sgns.words25.vocab
