@@ -27,7 +27,7 @@ if __name__ == '__main__':
         --h_win_right NUM       0 for standard RNN    [default: 0]
         --nhidden NUM           number of hidden units  [default: 100]
         --seed NUM              ramdom seed     [default: 123]
-        --nepochs NUM           number of epochs [default: 30]
+        --nepochs NUM           number of epochs [default: 20]
         --dropRate NUM          drop rate [default: 0.0]
         --attention STRING      attention type general/concat [default: general]
         --lvrg NUM              leverage the impact of hidden layer and attention opponent, 0 for standard RNN, 1 for attetion [default: 0]

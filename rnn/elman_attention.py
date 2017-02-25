@@ -211,7 +211,7 @@ class model(object):
 
 
             def ss(cc, hh):
-                s = T.nnet.softmax(T.dot(cc, iParams['Wcs' + lr]) + T.dot(hh, iParams['Whs' + lr]) * lvrg  + iParams['Wchb' + lr])
+                s = T.nnet.softmax(T.dot(cc, iParams['Wcs' + lr]) + T.dot(hh, iParams['Whs' + lr]) * lvrg + iParams['Wchb' + lr])
                 #s = s / 2
                 return s
 
