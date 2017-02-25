@@ -190,9 +190,6 @@ def run(params) :
 
 
 
-# small dataset
-# results bug
-# json
-# command line
-# WV folder
+
+
 

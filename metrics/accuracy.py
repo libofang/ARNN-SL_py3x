@@ -38,6 +38,7 @@ def conlleval(p, g, w, filename, options=[]):
     
     return get_perf(filename, options)
 
+
 def get_perf(filename, options = []):
     ''' run conlleval.pl perl script to obtain
     precision/recall and F1 score '''

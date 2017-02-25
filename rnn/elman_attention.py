@@ -251,6 +251,7 @@ class model(object):
         updates = OrderedDict(( p, p-lr*g ) for p, g in zip( self.params , gradients))
 
         # theano functions
+
         self.classify = theano.function(inputs=[idxs, dropRate, useDrop, rho], outputs=y_pred)
 
         self.train = theano.function(inputs=[idxs, y, dropRate, useDrop],

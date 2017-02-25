@@ -88,6 +88,7 @@ def chunk():
                 if c not in dicts['labels2idx']:
                     dicts['labels2idx'][c] = len(dicts['labels2idx'])
 
+
     out = {}
     for type in ["train", "test", "valid"] :
         w = []

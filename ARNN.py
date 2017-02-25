@@ -18,6 +18,7 @@ if __name__ == '__main__':
     Usage:
         ARNN.py [options] <WVFile> <WVVocabFile> <JSONOutputFile>
 
+
     Options:
         --verbose NUM           verbose print more text    [default: 2]
         --dataset STRING        the dataset: pos, chunk, ner [default: chunk]
