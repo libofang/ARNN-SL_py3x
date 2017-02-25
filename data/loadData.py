@@ -113,6 +113,9 @@ def chunk():
                 l.append(dicts['labels2idx'][c])
                 o.append(0)
         out[type] = (ww, oo, ll)
+    out["train"][0].extend(out["valid"][0])
+    out["train"][1].extend(out["valid"][1])
+    out["train"][2].extend(out["valid"][2])
     return out["train"], out["valid"], out["test"], dicts
 
 def pos():

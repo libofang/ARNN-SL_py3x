@@ -48,6 +48,7 @@ def get_perf(filename, options = []):
     for line in stdout.decode().split('\n'):
         if 'accuracy' in line:
             out = line.split()
+
             break
     
     precision = float(out[6][:-2])

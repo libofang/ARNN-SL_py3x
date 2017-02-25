@@ -1,11 +1,16 @@
 # ARNN-SL for python3.x
 
-run examples/elman-forward_combine.py file with Environment Variable 
+
+run `python ARNN.py -h` for more detailed hyperparameter settings.
+For example, 
+```
+ARNN.py [options] <WVFile> <WVVocabFile> <JSONOutputFile>
+python ARNN.py --nepochs 1 ../WV/201308_p_word_linear-2_skip/sgns.words100.npy ../WV/201308_p_word_linear-2_skip/sgns.words100.vocab ./json_output.txt
+```
+set the THEANO Environment Variable as
 ```
 THEANO_FLAGS=cuda.root=/usr/local/cuda,device=gpu,floatX=float32
 ```
-
-See the main function of examples/elman-forward_combine.py file for detailed hyper-parameter settings.
 
 toy pre-trained word embeddings can be found:
 embedding: http://202.112.113.8/d/ARNN-SL/WV/201308_p_word_linear-2_skip/sgns.words25.npy    
