@@ -24,7 +24,7 @@ def run(params):
 
     folder = os.path.basename(__file__).split('.')[0]
     if not os.path.exists(folder): os.mkdir(folder)
-    rho = numpy.array([100, 90, 80, 60, 50, 0]).astype(numpy.int32)  # 100,90,80,70,60,50,0 # combining forward and backward layers
+    rhoList = numpy.array([100, 50]).astype(numpy.int32)  # 100,90,80,70,60,50,0 # combining forward and backward layers
 
     # load the dataset
     eval_options = []
@@ -48,15 +48,15 @@ def run(params):
     test_lex, test_ne, test_y = test_set
 
     ## :( hack
-    train_lex = train_lex[::100]
-    train_ne = train_ne[::100]
-    train_y = train_y[::100]
-    valid_lex = valid_lex[::100]
-    valid_ne = valid_ne[::100]
-    valid_y = valid_y[::100]
-    test_lex = test_lex[::100]
-    test_ne = test_ne[::100]
-    test_y = test_y[::100]
+    # train_lex = train_lex[::100]
+    # train_ne = train_ne[::100]
+    # train_y = train_y[::100]
+    # valid_lex = valid_lex[::100]
+    # valid_ne = valid_ne[::100]
+    # valid_y = valid_y[::100]
+    # test_lex = test_lex[::100]
+    # test_ne = test_ne[::100]
+    # test_y = test_y[::100]
 
     vocsize = len(dic['words2idx'])
     nclasses = len(dic['labels2idx'])
@@ -87,11 +87,11 @@ def run(params):
                 miss += 1
         print("missing words rate : ", miss, '/', vocsize)
 
-    best_valid = numpy.zeros(len(rho)) - numpy.inf
-    best_test = numpy.zeros(len(rho)) - numpy.inf
+    best_valid = numpy.zeros(len(rhoList)) - numpy.inf
+    best_test = numpy.zeros(len(rhoList)) - numpy.inf
 
-    test_f1List = [[], [], [], [], [], []]  # this is used for drawing line chart.
-
+    testMeasureList = [[]] * len(rhoList)  # this is used for drawing line chart.
+    print(testMeasureList)
     # instanciate the model
     numpy.random.seed(params['seed'])
     random.seed(params['seed'])
@@ -129,18 +129,18 @@ def run(params):
 
         print('start pred train', time.time() / 60)
         predictions_train = [[map(lambda varible: idx2label[varible], w) \
-                              for w in rnn.classify(numpy.asarray(contextwin(x)).astype('int32'), params['dropRate'], 0, rho)]
+                              for w in rnn.classify(numpy.asarray(contextwin(x)).astype('int32'), params['dropRate'], 0, rhoList)]
                              for x in train_lex]
 
         predictions_test = [[map(lambda varible: idx2label[varible], w) \
-                             for w in rnn.classify(numpy.asarray(contextwin(x)).astype('int32'), params['dropRate'], 0, rho)]
+                             for w in rnn.classify(numpy.asarray(contextwin(x)).astype('int32'), params['dropRate'], 0, rhoList)]
                             for x in test_lex]
 
         predictions_valid = [[map(lambda varible: idx2label[varible], w) \
-                              for w in rnn.classify(numpy.asarray(contextwin(x)).astype('int32'), params['dropRate'], 0, rho)]
+                              for w in rnn.classify(numpy.asarray(contextwin(x)).astype('int32'), params['dropRate'], 0, rhoList)]
                              for x in valid_lex]
 
-        for i_rho in range(len(rho)):
+        for i_rho in range(len(rhoList)):
 
             groundtruth_train = [map(lambda x: idx2label[x], y) for y in train_y]
             words_train = [map(lambda x: idx2word[x], w) for w in train_lex]
@@ -148,7 +148,6 @@ def run(params):
             words_test = [map(lambda x: idx2word[x], w) for w in test_lex]
             groundtruth_valid = [map(lambda x: idx2label[x], y) for y in valid_y]
             words_valid = [map(lambda x: idx2word[x], w) for w in valid_lex]
-
 
             ptrain = [p[i_rho] for p in predictions_train]
             ptest = [p[i_rho] for p in predictions_test]
@@ -160,35 +159,31 @@ def run(params):
             res_valid = conlleval(pvalid, groundtruth_valid, words_valid, folder + '/current.valid.txt' + str(i_rho) + str(params['seed']),
                                   eval_options)
 
-            print('                                     epoch', e, ' rho ', i_rho, '  train p', res_train[
-                'p'], 'valid p', res_valid[
-                      'p'], '  train r', res_train[
-                      'r'], 'valid r', res_valid[
-                      'r'], '  train F1', res_train[
-                      'f1'], 'valid F1', res_valid[
-                      'f1'], 'best test F1', res_test['f1'], ' ' * 20)
+            print('                                     epoch', e, ' rhoList ', i_rho,
+                  '  train p', res_train['p'], 'valid p', res_valid['p'], '  train r', res_train['r'], 'valid r', res_valid['r'],
+                  '  train ', params['measure'], res_train['measure'], 'valid ', params['measure'], res_valid['measure'],
+                  'best test ', params['measure'], res_test['measure'], ' ' * 20)
 
-            test_f1List[i_rho].append(res_test['f1'])
+            testMeasureList[i_rho].append(res_test['measure'])
 
-            if res_valid['f1'] > best_valid[i_rho]:
-                best_valid[i_rho] = res_valid['f1']
-                best_test[i_rho] = res_test['f1']
+            if res_valid['measure'] > best_valid[i_rho]:
+                best_valid[i_rho] = res_valid['measure']
+                best_test[i_rho] = res_test['measure']
 
-        for i_rho in range(len(rho)):  # this is used for drawing line chart.
+        for i_rho in range(len(rhoList)):  # this is used for drawing line chart.
             print(i_rho, params['dataset'], params['WVModel'], end=' ')
-            for iff1 in test_f1List[i_rho]:
-                print(iff1, end=' ')
+            for v in testMeasureList[i_rho]:
+                print(v, end=' ')
             print('')
 
-        for i_rho in range(len(rho)):
-            print('Best results right now', rho[i_rho], ' ', best_valid[i_rho], '/', best_test[i_rho])
+        for i_rho in range(len(rhoList)):
+            print('current best results', rhoList[i_rho], ' ', best_valid[i_rho], '/', best_test[i_rho])
 
-    with open(params['JSONOutputFile'], 'w') as file:
-        params['bestF1score'] = ndarray.tolist(best_test)
-        params['F1scoreListBasedOnEpochs'] = test_f1List
-        jsonResults = json.dumps(params)
-        file.write(jsonResults)
+    with open(params['JSONOutputFile'], 'w') as outputFile:
+        params['best'] = ndarray.tolist(best_test)
+        params['resultListBasedOnEpochs'] = testMeasureList
+        res = json.dump(params, outputFile, sort_keys=True, indent=4, separators=(',', ': '))
+        print(res)
 
-# 0.0 bug
 # json haokan
 # merge json information

@@ -222,7 +222,7 @@ class model(object):
         #predict
         sl0 = stt['l'][:, 0, :]
         sr0 = stt['r'][:, 0, :]
-        rho = T.ivector()
+        rhoList = T.ivector()
         def r_rho(r):
 
             s = sl0 * r / 100.0 + sr0 * (1 - r / 100.0)
@@ -230,8 +230,8 @@ class model(object):
             y_p = T.argmax(p_y_given_x_sentence, axis=1)
             return y_p
         y_pred, _ = theano.scan(fn=r_rho, \
-                           sequences=rho, \
-                           n_steps=rho.shape[0])
+                           sequences=rhoList, \
+                           n_steps=rhoList.shape[0])
 
         nll = T.sum(T.diag(-T.log(sl0)[:, y])) + T.sum(T.diag(-T.log(sr0)[:, y]))
 
@@ -252,7 +252,7 @@ class model(object):
 
         # theano functions
 
-        self.classify = theano.function(inputs=[idxs, dropRate, useDrop, rho], outputs=y_pred)
+        self.classify = theano.function(inputs=[idxs, dropRate, useDrop, rhoList], outputs=y_pred)
 
         self.train = theano.function(inputs=[idxs, y, dropRate, useDrop],
                                      outputs=[nll, aaL],

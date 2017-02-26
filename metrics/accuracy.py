@@ -54,9 +54,9 @@ def get_perf(filename, options = []):
     
     precision = float(out[6][:-2])
     recall    = float(out[8][:-2])
-    f1score   = float(out[10])
+    measure   = float(out[10])
 
-    return {'p':precision, 'r':recall, 'f1':f1score}
+    return {'p':precision, 'r':recall, 'measure':measure}
 
 def get_perfo(filename):
     ''' 
