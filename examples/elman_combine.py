@@ -72,7 +72,6 @@ def run(params):
         with open(params['WVVocabFile']) as f:
             vocab = [line.strip() for line in f if len(line) > 0]
         wi = dict([(a, i) for i, a in enumerate(vocab)])
-        iw = vocab
         wv = numpy.zeros((vocsize + 1, params['emb_dimension']))
         random_v = math.sqrt(6.0 / numpy.sum(params['emb_dimension'])) * numpy.random.uniform(-1.0, 1.0, (params['emb_dimension']))
 

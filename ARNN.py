@@ -45,16 +45,19 @@ if __name__ == '__main__':
 
     params['verbose'] = int(args['--verbose'])
     params['dataset'] = args['--dataset']
+    params['fold'] = int(args['--fold'])
     params['h_win_left'] = int(args['--h_win_left'])
     params['h_win_right'] = int(args['--h_win_right'])
-    params['emb_dimension'] = int(args['--emb_dimension'])
     params['nhidden'] = int(args['--nhidden'])
     params['seed'] = int(args['--seed'])
     params['nepochs'] = int(args['--nepochs'])
     params['dropRate'] = float(args['--dropRate'])
     params['attention'] = args['--attention']
     params['lvrg'] = int(args['--lvrg'])
+
+    params['emb_dimension'] = int(args['--emb_dimension'])
     params['WVModel'] = args['--WVModel']
+
     params['WVFile'] = args['<WVFile>']
     params['WVVocabFile'] = args['<WVVocabFile>']
     params['JSONOutputFile'] = args['<JSONOutputFile>']
