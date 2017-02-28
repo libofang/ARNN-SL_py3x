@@ -68,6 +68,7 @@ def run(params):
         # load word vector
         wvnp = np.load(params['WVFile'])
         params['emb_dimension'] = len(wvnp[0])
+
         # load vocab
         with open(params['WVVocabFile']) as f:
             vocab = [line.strip() for line in f if len(line) > 0]
