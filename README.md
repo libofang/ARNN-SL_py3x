@@ -27,7 +27,7 @@ sudo pip install Theano
 ```
 
 
-##calculate the average distance of each word pairs with the same label.
+##calculate the average similarity of each word pairs with the same label.
 
 label indicate named entity or pos tag.
 

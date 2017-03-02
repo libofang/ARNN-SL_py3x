@@ -25,12 +25,13 @@ if __name__ == '__main__':
         --fold NUM              0,1,2,3,4  used only for atis dataset  [default: 3]
         --h_win_left NUM        0 for standard RNN    [default: 0]
         --h_win_right NUM       0 for standard RNN    [default: 0]
+        --h_win NUM             -1 indicate the h_win_left/right paramter should be used. [default: -1]
         --nhidden NUM           number of hidden units  [default: 100]
         --seed NUM              ramdom seed     [default: 123]
         --nepochs NUM           number of epochs [default: 20]
         --dropRate NUM          drop rate [default: 0.0]
         --attention STRING      attention type general/concat [default: general]
-        --lvrg NUM              leverage the impact of hidden layer and attention opponent, 0 for standard RNN, 1 for attetion [default: 0]
+        --lvrg NUM              leverage the impact of hidden layer and attention opponent, 0 for standard RNN, 1 for attention [default: 0]
 
         --emb_dimension NUM     dimension of word embedding, -1 indicates using the default dimension in word vector file. [default: -1]
         --WVModel STRING        specify which word embedding model is used [default: unknown]
@@ -48,6 +49,11 @@ if __name__ == '__main__':
     params['fold'] = int(args['--fold'])
     params['h_win_left'] = int(args['--h_win_left'])
     params['h_win_right'] = int(args['--h_win_right'])
+    params['h_win'] = int(args['--h_win'])
+    if params['h_win'] != -1:
+        params['h_win_left'] = params['h_win']
+        params['h_win_right'] = params['h_win']
+
     params['nhidden'] = int(args['--nhidden'])
     params['seed'] = int(args['--seed'])
     params['nepochs'] = int(args['--nepochs'])

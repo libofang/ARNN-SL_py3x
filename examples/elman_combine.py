@@ -63,7 +63,7 @@ def run(params):
     nsentences = len(train_lex)
 
     wv = None
-    if params['WVFile'] is not 'random':
+    if params['WVFile'] != 'random':
 
         # load word vector
         wvnp = np.load(params['WVFile'])

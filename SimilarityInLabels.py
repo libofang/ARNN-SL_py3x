@@ -38,7 +38,7 @@ if __name__ == '__main__':
     params['WVRoot'] = args['<WVRoot>']
 
     resultMap = {}
-    for dataset in ['ner']: # , 'pos', 'chunk'
+    for dataset in ['ner', 'pos']: # , 'pos', 'chunk'
         params['dataset'] = dataset
 
         wvnpList = []
