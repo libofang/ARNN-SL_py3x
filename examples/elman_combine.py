@@ -47,15 +47,15 @@ def run(params):
     test_lex, test_ne, test_y = test_set
 
     ## :( hack
-    # train_lex = train_lex[::100]
-    # train_ne = train_ne[::100]
-    # train_y = train_y[::100]
-    # valid_lex = valid_lex[::100]
-    # valid_ne = valid_ne[::100]
-    # valid_y = valid_y[::100]
-    # test_lex = test_lex[::100]
-    # test_ne = test_ne[::100]
-    # test_y = test_y[::100]
+    train_lex = train_lex[::100]
+    train_ne = train_ne[::100]
+    train_y = train_y[::100]
+    valid_lex = valid_lex[::100]
+    valid_ne = valid_ne[::100]
+    valid_y = valid_y[::100]
+    test_lex = test_lex[::100]
+    test_ne = test_ne[::100]
+    test_y = test_y[::100]
 
     vocsize = len(dic['words2idx'])
     nclasses = len(dic['labels2idx'])
@@ -66,14 +66,14 @@ def run(params):
 
         # load word vector
         wvnp = np.load(params['WVFile'])
-        params['emb_dimension'] = len(wvnp[0])
+        params['WVModel']['emb_dimension'] = len(wvnp[0])
 
         # load vocab
         with open(params['WVVocabFile']) as f:
             vocab = [line.strip() for line in f if len(line) > 0]
         wi = dict([(a, i) for i, a in enumerate(vocab)])
-        wv = numpy.zeros((vocsize + 1, params['emb_dimension']))
-        random_v = math.sqrt(6.0 / numpy.sum(params['emb_dimension'])) * numpy.random.uniform(-1.0, 1.0, (params['emb_dimension']))
+        wv = numpy.zeros((vocsize + 1, params['WVModel']['emb_dimension']))
+        random_v = math.sqrt(6.0 / numpy.sum(params['WVModel']['emb_dimension'])) * numpy.random.uniform(-1.0, 1.0, (params['WVModel']['emb_dimension']))
 
         miss = 0  # the number of missing words in pre-trained word embeddings
         for i in range(0, vocsize):
@@ -89,18 +89,25 @@ def run(params):
 
     print(json.dumps(params,sort_keys=True, indent=4, separators=(',', ': ')))
 
-    best_valid = numpy.zeros(len(rhoList)) - numpy.inf
-    best_test = numpy.zeros(len(rhoList)) - numpy.inf
+    rhoSuffix = "%_forward"
+    best_valid = {}
+    best_test = {}
+    for i_rho in range(len(rhoList)):
+        best_valid[str(rhoList[i_rho]) + rhoSuffix] = -numpy.inf
+        best_test[str(rhoList[i_rho]) + rhoSuffix] = -numpy.inf
+    validMeasureList = {}
+    testMeasureList = {}   # this is used for drawing line chart.
+    for i_rho in range(len(rhoList)):
+        validMeasureList[str(rhoList[i_rho]) + rhoSuffix] = []
+        testMeasureList[str(rhoList[i_rho]) + rhoSuffix] = []
 
-    testMeasureList = [[] for i in range(len(rhoList))]   # this is used for drawing line chart.
-    print(testMeasureList)
     # instanciate the model
     numpy.random.seed(params['seed'])
     random.seed(params['seed'])
     rnn = elman_attention.model(nh=params['nhidden'],
                                 nc=nclasses,
                                 ne=vocsize,
-                                de=params['emb_dimension'],
+                                de=params['WVModel']['emb_dimension'],
                                 attention=params['attention'],
                                 h_win=(params['h_win_left'], params['h_win_right']),
                                 lvrg=params['lvrg'],
@@ -166,24 +173,29 @@ def run(params):
                   '  train ', params['measure'], res_train['measure'], 'valid ', params['measure'], res_valid['measure'],
                   'best test ', params['measure'], res_test['measure'], ' ' * 20)
 
-            testMeasureList[i_rho].append(res_test['measure'])
+            validMeasureList[str(rhoList[i_rho]) + rhoSuffix].append(res_valid['measure'])
+            testMeasureList[str(rhoList[i_rho]) + rhoSuffix].append(res_test['measure'])
 
-            if res_valid['measure'] > best_valid[i_rho]:
-                best_valid[i_rho] = res_valid['measure']
-                best_test[i_rho] = res_test['measure']
+            if res_valid['measure'] > best_valid[str(rhoList[i_rho]) + rhoSuffix]:
+                best_valid[str(rhoList[i_rho]) + rhoSuffix] = res_valid['measure']
+                best_test[str(rhoList[i_rho]) + rhoSuffix] = res_test['measure']
 
         for i_rho in range(len(rhoList)):  # this is used for drawing line chart.
             print(i_rho, params['dataset'], params['WVModel'], end=' ')
-            for v in testMeasureList[i_rho]:
+            for v in testMeasureList[str(rhoList[i_rho]) + rhoSuffix]:
                 print(v, end=' ')
             print('')
 
         for i_rho in range(len(rhoList)):
-            print('current best results', rhoList[i_rho], ' ', best_valid[i_rho], '/', best_test[i_rho])
+            print('current best results', rhoList[i_rho], ' ', best_valid[str(rhoList[i_rho]) + rhoSuffix], '/', best_test[str(rhoList[i_rho]) + rhoSuffix])
 
     with open(params['JSONOutputFile'], 'w') as outputFile:
-        params['best'] = ndarray.tolist(best_test)
-        params['resultListBasedOnEpochs'] = testMeasureList
+        params['results'] = {}
+        params['results']['best_valid_' + params['measure']] = best_valid
+        params['results']['best_test_' + params['measure']] = best_test
+        params['results']['valid_' + params['measure'] + 'ListBasedOnEpochs'] = validMeasureList
+        params['results']['test_' + params['measure'] + 'ListBasedOnEpochs'] = testMeasureList
+
         res = json.dump(params, outputFile, sort_keys=True, indent=4, separators=(',', ': '))
         print(res)
 

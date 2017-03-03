@@ -21,6 +21,7 @@ if __name__ == '__main__':
 
     Options:
         --verbose NUM           verbose print more text    [default: 2]
+        --RNNModel STRING       currently only support (bi-) LSTM [default: LSTM]
         --dataset STRING        the dataset: pos, chunk, ner [default: chunk]
         --fold NUM              0,1,2,3,4  used only for atis dataset  [default: 3]
         --h_win_left NUM        0 for standard RNN    [default: 0]
@@ -34,7 +35,6 @@ if __name__ == '__main__':
         --lvrg NUM              leverage the impact of hidden layer and attention opponent, 0 for standard RNN, 1 for attention [default: 0]
 
         --emb_dimension NUM     dimension of word embedding, -1 indicates using the default dimension in word vector file. [default: -1]
-        --WVModel STRING        specify which word embedding model is used, currently deduced by the file/folder name [default: unknown]
 
     """)
 
@@ -43,6 +43,7 @@ if __name__ == '__main__':
 
 
     params = {} # all the parameters
+    params['WVModel'] = {} # this param is deduced from the file/folder name
 
     params['verbose'] = int(args['--verbose'])
     params['dataset'] = args['--dataset']
@@ -61,15 +62,16 @@ if __name__ == '__main__':
     params['attention'] = args['--attention']
     params['lvrg'] = int(args['--lvrg'])
 
-    params['emb_dimension'] = int(args['--emb_dimension'])
+    params['WVModel']['emb_dimension'] = int(args['--emb_dimension'])
 
     params['WVFile'] = args['<WVFile>']
     params['WVVocabFile'] = args['<WVVocabFile>']
     params['JSONOutputFile'] = args['<JSONOutputFile>']
 
     # deduce the WVModel from the file/folder name
-    params['WVModel'] = args['--WVModel']
-    if params['WVModel'] == 'unknown':
+    if params['WVFile'] == 'random':
+        params['WVModel']['model'] = 'random'
+    else:
         params['WVModel'] = {}
         if 'sgns' in params['WVFile']:
             params['WVModel']['model'] = 'sgns'
@@ -95,11 +97,10 @@ if __name__ == '__main__':
             params['WVModel']['window'] = params['WVFile'].split('linear-')[1].split('_')[0]
         if '201308' in params['WVFile']:
             params['WVModel']['corpus'] = {}
-            params['WVModel']['corpus']= 'wikipedia 201308 dump'
+            params['WVModel']['corpus'] = 'wikipedia 201308 dump'
         else:
             params['WVModel']['corpus'] = 'unknown'
         params['WVModel']['min_count'] = 100
-
 
     elman_combine.run(params)
 
