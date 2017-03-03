@@ -20,7 +20,6 @@ from utils.tools import shuffle, minibatch, contextwin
 
 
 def run(params):
-    print(params)
 
     folder = os.path.basename(__file__).split('.')[0]
     if not os.path.exists(folder): os.mkdir(folder)
@@ -86,6 +85,9 @@ def run(params):
                 wv[i] = random_v
                 miss += 1
         print("missing words rate : ", miss, '/', vocsize)
+        params['WVModel']['vocab_size'] = len(vocab)
+
+    print(json.dumps(params,sort_keys=True, indent=4, separators=(',', ': ')))
 
     best_valid = numpy.zeros(len(rhoList)) - numpy.inf
     best_test = numpy.zeros(len(rhoList)) - numpy.inf
@@ -187,11 +189,4 @@ def run(params):
 
 # json haokan
 # merge json information
-
-# 0 ner unknown 79.41 82.03 81.76 83.95 83.48 86.03 81.54 85.22 83.1 85.49 82.96 85.72 82.55 85.66 82.56 85.81 82.68 85.85
-# 0 ner unknown 79.94 82.05 82.4 84.07 82.91 85.61 82.84 85.02 82.15 84.65 83.12 85.36 82.27 85.31 82.46 85.29 82.22 85.41
-# 0 ner unknown 80.25 81.6 81.93 83.64 83.98 85.35 82.58 84.89 83.22 85.63 83.33 85.62 82.51 85.99 83.01 85.63 83.02 85.78 82.39 85.75
-# 0 ner unknown 80.29 81.92 81.69 83.72 82.99 85.4 81.8 84.97 82.66 85.24 82.5 85.9 82.16 85.43 82.65 84.89 82.25 85.65
-# 0 ner unknown 78.97 81.95 81.34 83.74 83.33 85.9 81.61 85.05 82.36 84.48 82.11 85.93 82.56 85.51 82.13 85.13 82.32 85.97
-#               80.44 81.02 82.66 83.55 83.51 84.24 85.3 85.07 84.35 85.15 84.76 84.94 84.84 85.3 85.59 85.58 85.5 85.54 85.27 85.5 85.3 85.85 85.17 85.33 85.0
 
