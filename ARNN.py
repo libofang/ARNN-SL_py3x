@@ -28,7 +28,7 @@ if __name__ == '__main__':
         --h_win_right NUM       0 for standard RNN    [default: 0]
         --h_win NUM             -1 indicate the h_win_left/right paramter should be used. [default: -1]
         --nhidden NUM           number of hidden units  [default: 100]
-        --seed NUM              ramdom seed     [default: 123]
+        --seed NUM              ramdom seed     [default: 12]
         --nepochs NUM           number of epochs [default: 20]
         --dropRate NUM          drop rate [default: 0.0]
         --attention STRING      attention type general/concat [default: general]
