@@ -86,8 +86,8 @@ class model(object):
 
                 #iParams['lp' + lr] = getWeight((h_win[0], nh ))
                 #iParams['rp' + lr] = getWeight((h_win[1], nh))
-                lp = getWeight((h_win[0], nh ))
-                rp = getWeight((h_win[1], nh ))
+                lp = getWeight((h_win[0], nh )) * 5
+                rp = getWeight((h_win[1], nh )) * 5
 
                 if attention == 'dot':
                     pass

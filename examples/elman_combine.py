@@ -47,15 +47,15 @@ def run(params):
     test_lex, test_ne, test_y = test_set
 
     ## :( hack
-    train_lex = train_lex[::100]
-    train_ne = train_ne[::100]
-    train_y = train_y[::100]
-    valid_lex = valid_lex[::100]
-    valid_ne = valid_ne[::100]
-    valid_y = valid_y[::100]
-    test_lex = test_lex[::100]
-    test_ne = test_ne[::100]
-    test_y = test_y[::100]
+    # train_lex = train_lex[::100]
+    # train_ne = train_ne[::100]
+    # train_y = train_y[::100]
+    # valid_lex = valid_lex[::100]
+    # valid_ne = valid_ne[::100]
+    # valid_y = valid_y[::100]
+    # test_lex = test_lex[::100]
+    # test_ne = test_ne[::100]
+    # test_y = test_y[::100]
 
     vocsize = len(dic['words2idx'])
     nclasses = len(dic['labels2idx'])
