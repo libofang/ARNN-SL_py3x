@@ -8,6 +8,8 @@ For example,
 ARNN.py [options] <WVFolder> <JSONOutputFile>
 python3 ARNN.py --dataset ner --dropRate 0.2 random ./json_output.txt
 python3 ARNN.py --dataset ner --dropRate 0.2 ../WV/201308_p/structured_linear-2/cbow/ ./json_output.txt
+python3 ARNN.py --dataset ner --dropRate 0.2 --emb_dimension 500 random ./json_output.txt
+python3 ARNN.py --dataset ner --dropRate 0.2 --emb_dimension 500 ../WV/201308_p/structured_linear-2/cbow/ ./json_output.txt
 ```
 set the THEANO Environment Variable as
 ```
