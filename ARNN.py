@@ -14,6 +14,13 @@ from docopt import docopt
 
 if __name__ == '__main__':
 
+
+    # temp
+    # for folderName in os.listdir("../WV/201308_p/"):
+    #     print("mv " + folderName + " " + folderName.replace("2_", '2/').replace('1_', '1/'))
+    # for folderName in os.listdir("../WV/201308_p/"):
+    #     for fileName in os.listdir("../WV/201308_p/" + folderName + "/"):
+    #         print("mv " + folderName + "/" + fileName + " " + folderName + "/" + fileName.replace("sgns.", '').replace('glove.', ''))
     args = docopt("""
     Usage:
         ARNN.py [options] <WVFile> <WVVocabFile> <JSONOutputFile>
@@ -73,8 +80,8 @@ if __name__ == '__main__':
         params['WVModel']['model'] = 'random'
     else:
         params['WVModel'] = {}
-        if 'sgns' in params['WVFile']:
-            params['WVModel']['model'] = 'sgns'
+        if 'skip' in params['WVFile']:
+            params['WVModel']['model'] = 'skip'
             params['WVModel']['iteration'] = 2
             params['WVModel']['negative_sampling'] = 5
         if 'cbow' in params['WVFile']:
@@ -91,11 +98,11 @@ if __name__ == '__main__':
             params['WVModel']['context']['representation'] = 'unbound'
         if 'dependency' in params['WVFile']:
             params['WVModel']['context']['type'] = 'dependency-based'
-            params['WVModel']['window'] = params['WVFile'].split('dependency-')[1].split('_')[0]
+            params['WVModel']['window'] = params['WVFile'].split('dependency-')[1].split('/')[0]
         else:
             params['WVModel']['context']['type'] = 'linear'
-            params['WVModel']['window'] = params['WVFile'].split('linear-')[1].split('_')[0]
-        if '201308' in params['WVFile']:
+            params['WVModel']['window'] = params['WVFile'].split('linear-')[1].split('/')[0]
+        if '201308_p' in params['WVFile']:
             params['WVModel']['corpus'] = {}
             params['WVModel']['corpus'] = 'wikipedia 201308 dump'
         else:
