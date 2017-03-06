@@ -6,8 +6,8 @@ run `python ARNN.py -h` for more detailed hyperparameter settings.
 For example, 
 ```
 ARNN.py [options] <WVFolder> <JSONOutputFile>
-python3 ARNN.py --dataset ner random ./json_output.txt
-python3 ARNN.py --dataset ner ../WV/201308_p/structured_linear-2/cbow/ --dropRate 0.2 ./json_output.txt
+python3 ARNN.py --dataset ner --dropRate 0.2 random ./json_output.txt
+python3 ARNN.py --dataset ner --dropRate 0.2 ../WV/201308_p/structured_linear-2/cbow/ ./json_output.txt
 ```
 set the THEANO Environment Variable as
 ```
