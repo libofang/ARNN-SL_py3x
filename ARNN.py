@@ -23,7 +23,8 @@ if __name__ == '__main__':
     #         print("mv " + folderName + "/" + fileName + " " + folderName + "/" + fileName.replace("sgns.", '').replace('glove.', ''))
     args = docopt("""
     Usage:
-        ARNN.py [options] <WVFile> <WVVocabFile> <JSONOutputFile>
+        ARNN.py [options] <WVFolder> <JSONOutputFile>
+
 
 
     Options:
@@ -41,7 +42,7 @@ if __name__ == '__main__':
         --attention STRING      attention type general/concat [default: general]
         --lvrg NUM              leverage the impact of hidden layer and attention opponent, 0 for standard RNN, 1 for attention [default: 0]
 
-        --emb_dimension NUM     dimension of word embedding, -1 indicates using the default dimension in word vector file. [default: -1]
+        --emb_dimension NUM     dimension of word embedding [default: 500]
 
     """)
 
@@ -71,38 +72,36 @@ if __name__ == '__main__':
 
     params['WVModel']['emb_dimension'] = int(args['--emb_dimension'])
 
-    params['WVFile'] = args['<WVFile>']
-    params['WVVocabFile'] = args['<WVVocabFile>']
+    params['WVFolder'] = args['<WVFolder>']
     params['JSONOutputFile'] = args['<JSONOutputFile>']
 
     # deduce the WVModel from the file/folder name
-    if params['WVFile'] == 'random':
+    if params['WVFolder'] == 'random':
         params['WVModel']['model'] = 'random'
     else:
-        params['WVModel'] = {}
-        if 'skip' in params['WVFile']:
+        if 'skip' in params['WVFolder']:
             params['WVModel']['model'] = 'skip'
             params['WVModel']['iteration'] = 2
             params['WVModel']['negative_sampling'] = 5
-        if 'cbow' in params['WVFile']:
+        if 'cbow' in params['WVFolder']:
             params['WVModel']['model'] = 'cbow'
             params['WVModel']['iteration'] = 5
             params['WVModel']['negative_sampling'] = 5
-        if 'glove' in params['WVFile']:
+        if 'glove' in params['WVFolder']:
             params['WVModel']['model'] = 'glove'
             params['WVModel']['iteration'] = 30
         params['WVModel']['context'] = {}
-        if 'structured' in params['WVFile']:
+        if 'structured' in params['WVFolder']:
             params['WVModel']['context']['representation'] = 'bound'
         else:
             params['WVModel']['context']['representation'] = 'unbound'
-        if 'dependency' in params['WVFile']:
+        if 'dependency' in params['WVFolder']:
             params['WVModel']['context']['type'] = 'dependency-based'
-            params['WVModel']['window'] = params['WVFile'].split('dependency-')[1].split('/')[0]
+            params['WVModel']['window'] = params['WVFolder'].split('dependency-')[1].split('/')[0]
         else:
             params['WVModel']['context']['type'] = 'linear'
-            params['WVModel']['window'] = params['WVFile'].split('linear-')[1].split('/')[0]
-        if '201308_p' in params['WVFile']:
+            params['WVModel']['window'] = params['WVFolder'].split('linear-')[1].split('/')[0]
+        if '201308_p' in params['WVFolder']:
             params['WVModel']['corpus'] = {}
             params['WVModel']['corpus'] = 'wikipedia 201308 dump'
         else:

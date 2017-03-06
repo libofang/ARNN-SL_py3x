@@ -5,8 +5,9 @@
 run `python ARNN.py -h` for more detailed hyperparameter settings.
 For example, 
 ```
-ARNN.py [options] <WVFile> <WVVocabFile> <JSONOutputFile>
-python3 ARNN.py --nepochs 1 ../WV/201308_p_word_linear-2_skip/sgns.words100.npy ../WV/201308_p_word_linear-2_skip/sgns.words100.vocab ./json_output.txt
+ARNN.py [options] <WVFolder> <JSONOutputFile>
+python3 ARNN.py --dataset ner random ./json_output.txt
+python3 ARNN.py --dataset ner ../WV/201308_p/structured_linear-2/cbow/ --dropRate 0.2 ./json_output.txt
 ```
 set the THEANO Environment Variable as
 ```

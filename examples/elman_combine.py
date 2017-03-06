@@ -62,7 +62,9 @@ def run(params):
     nsentences = len(train_lex)
 
     wv = None
-    if params['WVFile'] != 'random':
+    if params['WVFolder'] != 'random':
+        params['WVFile'] = params['WVFolder'] + '/' + 'words' + str(params['WVModel']['emb_dimension']) + '.npy'
+        params['WVVocabFile'] = params['WVFolder'] + '/' + 'words' + str(params['WVModel']['emb_dimension']) + '.vocab'
 
         # load word vector
         wvnp = np.load(params['WVFile'])
