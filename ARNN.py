@@ -10,6 +10,8 @@ import theano
 
 from examples import elman_combine
 from docopt import docopt
+import time
+from datetime import datetime
 
 
 if __name__ == '__main__':

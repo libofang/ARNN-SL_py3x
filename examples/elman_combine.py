@@ -21,6 +21,10 @@ from utils.tools import shuffle, minibatch, contextwin
 
 def run(params):
 
+
+    start_time = time.time()
+
+
     folder = os.path.basename(__file__).split('.')[0]
     if not os.path.exists(folder): os.mkdir(folder)
     rhoList = numpy.array([100, 50]).astype(numpy.int32)  # 100,90,80,70,60,50,0 # combining forward and backward layers
@@ -191,12 +195,18 @@ def run(params):
         for i_rho in range(len(rhoList)):
             print('current best results', rhoList[i_rho], ' ', best_valid[str(rhoList[i_rho]) + rhoSuffix], '/', best_test[str(rhoList[i_rho]) + rhoSuffix])
 
+    end_time = time.time()
+
     with open(params['JSONOutputFile'], 'w') as outputFile:
         params['results'] = {}
         params['results']['best_valid_' + params['measure']] = best_valid
         params['results']['best_test_' + params['measure']] = best_test
         params['results']['valid_' + params['measure'] + 'ListBasedOnEpochs'] = validMeasureList
         params['results']['test_' + params['measure'] + 'ListBasedOnEpochs'] = testMeasureList
+        params['running_time'] = {}
+        params['running_time']['start'] = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(start_time))
+        params['running_time']['end'] = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(end_time))
+        params['running_time']['duration'] = end_time - start_time
 
         res = json.dump(params, outputFile, sort_keys=True, indent=4, separators=(',', ': '))
         print(res)
