@@ -77,38 +77,48 @@ if __name__ == '__main__':
     params['WVFolder'] = args['<WVFolder>']
     params['JSONOutputFile'] = args['<JSONOutputFile>']
 
+
     # deduce the WVModel from the file/folder name
     if params['WVFolder'] == 'random':
         params['WVModel']['model'] = 'random'
     else:
-        if 'skip' in params['WVFolder']:
-            params['WVModel']['model'] = 'skip'
-            params['WVModel']['iteration'] = 2
-            params['WVModel']['negative_sampling'] = 5
-        if 'cbow' in params['WVFolder']:
-            params['WVModel']['model'] = 'cbow'
-            params['WVModel']['iteration'] = 5
-            params['WVModel']['negative_sampling'] = 5
-        if 'glove' in params['WVFolder']:
-            params['WVModel']['model'] = 'glove'
-            params['WVModel']['iteration'] = 30
-        params['WVModel']['context'] = {}
-        if 'structured' in params['WVFolder']:
-            params['WVModel']['context']['representation'] = 'bound'
+        modelIndex = 0
+
+        if '[' in params['WVFolder'] and ']' in params['WVFolder']:
+            folderSet = set(eval(params['WVFolder'].replace('[', '[\'').replace(']', '\']').replace(',', '\',\'')))
         else:
-            params['WVModel']['context']['representation'] = 'unbound'
-        if 'dependency' in params['WVFolder']:
-            params['WVModel']['context']['type'] = 'dependency-based'
-            params['WVModel']['window'] = params['WVFolder'].split('dependency-')[1].split('/')[0]
-        else:
-            params['WVModel']['context']['type'] = 'linear'
-            params['WVModel']['window'] = params['WVFolder'].split('linear-')[1].split('/')[0]
-        if '201308_p' in params['WVFolder']:
-            params['WVModel']['corpus'] = {}
-            params['WVModel']['corpus'] = 'wikipedia 201308 dump'
-        else:
-            params['WVModel']['corpus'] = 'unknown'
-        params['WVModel']['min_count'] = 100
+            folderSet = [params['WVFolder']]
+        for folder in folderSet:
+            params['WVModel' + str(modelIndex)] = {}
+            if 'skip' in folder:
+                params['WVModel' + str(modelIndex)]['model'] = 'skip'
+                params['WVModel' + str(modelIndex)]['iteration'] = 2
+                params['WVModel' + str(modelIndex)]['negative_sampling'] = 5
+            if 'cbow' in folder:
+                params['WVModel' + str(modelIndex)]['model'] = 'cbow'
+                params['WVModel' + str(modelIndex)]['iteration'] = 5
+                params['WVModel' + str(modelIndex)]['negative_sampling'] = 5
+            if 'glove' in folder:
+                params['WVModel' + str(modelIndex)]['model'] = 'glove'
+                params['WVModel' + str(modelIndex)]['iteration'] = 30
+            params['WVModel' + str(modelIndex)]['context'] = {}
+            if 'structured' in folder:
+                params['WVModel' + str(modelIndex)]['context']['representation'] = 'bound'
+            else:
+                params['WVModel' + str(modelIndex)]['context']['representation'] = 'unbound'
+            if 'dependency' in folder:
+                params['WVModel' + str(modelIndex)]['context']['type'] = 'dependency-based'
+                params['WVModel' + str(modelIndex)]['window'] = folder.split('dependency-')[1].split('/')[0]
+            else:
+                params['WVModel' + str(modelIndex)]['context']['type'] = 'linear'
+                params['WVModel' + str(modelIndex)]['window'] = folder.split('linear-')[1].split('/')[0]
+            if '201308_p' in folder:
+                params['WVModel' + str(str(modelIndex))]['corpus'] = {}
+                params['WVModel' + str(modelIndex)]['corpus'] = 'wikipedia 201308 dump'
+            else:
+                params['WVModel' + str(modelIndex)]['corpus'] = 'unknown'
+            params['WVModel' + str(modelIndex)]['min_count'] = 100
+            modelIndex = modelIndex + 1
 
     elman_combine.run(params)
 

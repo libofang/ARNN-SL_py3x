@@ -67,31 +67,67 @@ def run(params):
 
     wv = None
     if params['WVFolder'] != 'random':
-        params['WVFile'] = params['WVFolder'] + '/' + 'words' + str(params['WVModel']['emb_dimension']) + '.npy'
-        params['WVVocabFile'] = params['WVFolder'] + '/' + 'words' + str(params['WVModel']['emb_dimension']) + '.vocab'
+        if '[' in params['WVFolder'] and ']' in params['WVFolder']:
+            folderSet = set(eval(params['WVFolder'].replace('[','[\'').replace(']','\']').replace(',','\',\'')))
+            print(folderSet)
+            wv = numpy.zeros((vocsize + 1, params['WVModel']['emb_dimension'] * len(folderSet) ))
 
-        # load word vector
-        wvnp = np.load(params['WVFile'])
-        params['WVModel']['emb_dimension'] = len(wvnp[0])
+            modelIndex = 0
+            for folder in folderSet:
+                params['WVFile'] = folder + '/' + 'words' + str(params['WVModel']['emb_dimension']) + '.npy'
+                params['WVVocabFile'] = folder + '/' + 'words' + str(params['WVModel']['emb_dimension']) + '.vocab'
+                # load word vector
+                wvnp = np.load(params['WVFile'])
 
-        # load vocab
-        with open(params['WVVocabFile']) as f:
-            vocab = [line.strip() for line in f if len(line) > 0]
-        wi = dict([(a, i) for i, a in enumerate(vocab)])
-        wv = numpy.zeros((vocsize + 1, params['WVModel']['emb_dimension']))
-        random_v = math.sqrt(6.0 / numpy.sum(params['WVModel']['emb_dimension'])) * numpy.random.uniform(-1.0, 1.0, (params['WVModel']['emb_dimension']))
+                # load vocab
+                with open(params['WVVocabFile']) as f:
+                    vocab = [line.strip() for line in f if len(line) > 0]
+                wi = dict([(a, i) for i, a in enumerate(vocab)])
 
-        miss = 0  # the number of missing words in pre-trained word embeddings
-        for i in range(0, vocsize):
-            word = idx2word[i]
-            if word in wi:
-                wv[i] = wvnp[wi[word]]
-                # print wvnp[wi[word]]
-            else:
-                wv[i] = random_v
-                miss += 1
-        print("missing words rate : ", miss, '/', vocsize)
-        params['WVModel']['vocab_size'] = len(vocab)
+                random_v = math.sqrt(6.0 / numpy.sum(params['WVModel']['emb_dimension'])) * numpy.random.uniform(-1.0, 1.0,
+                                                                                                                 (params['WVModel']['emb_dimension']))
+                miss = 0  # the number of missing words in pre-trained word embeddings
+                for i in range(0, vocsize):
+                    word = idx2word[i]
+                    if word in wi:
+                        wv[i][params['WVModel']['emb_dimension'] * modelIndex:params['WVModel']['emb_dimension'] * (modelIndex + 1)] = wvnp[wi[word]]
+                        # print wvnp[wi[word]]
+                    else:
+                        wv[i][params['WVModel']['emb_dimension'] * modelIndex:params['WVModel']['emb_dimension'] * (modelIndex + 1)] = random_v
+                        miss += 1
+                print("missing words rate : ", miss, '/', vocsize)
+                params['WVModel']['vocab_size'] = len(vocab)
+                modelIndex = modelIndex + 1
+
+            params['WVModel']['emb_dimension'] *= len(folderSet)
+            # return
+        else:
+            folder = params['WVFolder']
+            params['WVFile'] = folder + '/' + 'words' + str(params['WVModel']['emb_dimension']) + '.npy'
+            params['WVVocabFile'] = folder + '/' + 'words' + str(params['WVModel']['emb_dimension']) + '.vocab'
+
+            # load word vector
+            wvnp = np.load(params['WVFile'])
+            params['WVModel']['emb_dimension'] = len(wvnp[0])
+
+            # load vocab
+            with open(params['WVVocabFile']) as f:
+                vocab = [line.strip() for line in f if len(line) > 0]
+            wi = dict([(a, i) for i, a in enumerate(vocab)])
+            wv = numpy.zeros((vocsize + 1, params['WVModel']['emb_dimension']))
+            random_v = math.sqrt(6.0 / numpy.sum(params['WVModel']['emb_dimension'])) * numpy.random.uniform(-1.0, 1.0, (params['WVModel']['emb_dimension']))
+
+            miss = 0  # the number of missing words in pre-trained word embeddings
+            for i in range(0, vocsize):
+                word = idx2word[i]
+                if word in wi:
+                    wv[i] = wvnp[wi[word]]
+                    # print wvnp[wi[word]]
+                else:
+                    wv[i] = random_v
+                    miss += 1
+            print("missing words rate : ", miss, '/', vocsize)
+            params['WVModel']['vocab_size'] = len(vocab)
 
     print(json.dumps(params,sort_keys=True, indent=4, separators=(',', ': ')))
 
@@ -187,7 +223,7 @@ def run(params):
                 best_test[str(rhoList[i_rho]) + rhoSuffix] = res_test['measure']
 
         for i_rho in range(len(rhoList)):  # this is used for drawing line chart.
-            print(i_rho, params['dataset'], params['WVModel'], end=' ')
+            print(i_rho, params['dataset'], end=' ')
             for v in testMeasureList[str(rhoList[i_rho]) + rhoSuffix]:
                 print(v, end=' ')
             print('')

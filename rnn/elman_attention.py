@@ -53,7 +53,8 @@ class model(object):
         iParams = {}
 
         if wv is None:
-            emb = getWeight((ne + 1, de))
+            iParams['emb'] = getWeight((ne + 1, de))
+            emb = iParams['emb']
         else:
             emb = theano.shared(wv.astype(theano.config.floatX))
         # iParams['emb'] = getWeight((ne + 1, de))
