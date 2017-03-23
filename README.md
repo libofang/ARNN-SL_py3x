@@ -16,6 +16,12 @@ set the THEANO Environment Variable as
 THEANO_FLAGS=cuda.root=/usr/local/cuda,device=gpu,floatX=float32
 ```
 
+For multiple input word embeddings, use some thing like this "[file1,file2,file3]", not white space.
+For example,
+```
+python3 ARNN.py --lvrg 0 --h_win 0 --dataset chunk --attention general --emb_dimension 500 [../WV/201308_p/word_linear-2/skip/,../WV/201308_p/structured_linear-2/skip/] ./json_output_concat.txt
+
+```
 
 toy pre-trained word embeddings can be found:
 embedding: http://202.112.113.8/d/ARNN-SL/WV/201308_p_word_linear-2_skip/sgns.words25.npy    
